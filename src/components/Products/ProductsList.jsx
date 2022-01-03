@@ -33,23 +33,43 @@ function ProductsList() {
     //en le useState([]) se esta definiendo el valor de products como un array vacio
 
 
+    //con axios hago un get (peticion GET al back con el url '/products') para traer los productos
+    //igual que en postman
+    const getProducts = () => axios.get('/products')
+        //defino la variable que me trae la respuesta del servidor 
+        .then((respuesta) => {
+            //valido que la respuesta tenga un status 200 OK
+            if (respuesta.status === 200) {
+                // con la funcion que defini anteriormente con useState, actualizo la variable products
+                setProducts(respuesta.data)
+            }
+        })
+
     //este hook se utiliza para ejecutar funciones al momento en que se renderiza el componente
     //desde aqui puedo usar el setProducts que defini con el useState para agregar los valores
     //retornados desde el back en el estado (en este caso la variable products)
     useEffect(() => {
 
-        //con axios hago un get (peticion GET al back con el url '/products') para traer los productos
-        //igual que en postman
-        axios.get('/products')
-            //defino la variable que me trae la respuesta del servidor 
+        // se refactoriza para tener una funcion dedicada que traiga los productos
+        // para ejecutarla cada que se crea el componente y cada qyue elimino un producto
+        getProducts();
+
+
+    }, [])
+
+    //funcion para manejar el evento de clic en el boton de eliminar
+    //y ejecutar la eliminacion del producto
+    const eliminarProducto = (idProducto) => {
+        
+        axios.delete(`/products/${idProducto}`)
             .then((respuesta) => {
-                //valido que la respuesta tenga un status 200 OK
                 if (respuesta.status === 200) {
-                    // con la funcion que defini anteriormente con useState, actualizo la variable products
-                    setProducts(respuesta.data)
+                    //Se llama la funcion get products para actualizar la lista de productos
+                    //sin el producto eliminado
+                    getProducts();
                 }
             })
-    }, [])
+    }   
 
 
     return (
@@ -81,7 +101,9 @@ function ProductsList() {
                             >
                                 <EditIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton
+                                onClick={() => eliminarProducto(product.id)}
+                            >
                                 <DeleteIcon />
                             </IconButton>
                             </TableCell>
