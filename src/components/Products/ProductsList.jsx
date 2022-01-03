@@ -53,7 +53,7 @@ function ProductsList() {
 
 
     return (
-        <>
+        <TableContainer component={Paper}>
            <Table>
                <TableHead>
                 <TableRow>
@@ -89,7 +89,7 @@ function ProductsList() {
                    ))}
                </TableBody>
             </Table> 
-        </>
+        </TableContainer>
     );
 }
 
