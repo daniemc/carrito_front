@@ -7,8 +7,8 @@ import {
     Button,
 } from '@mui/material';
 
-
-function Productform() {
+//Aqui estoy recibiendo las propiedades (props) enviadas por el padre
+function Productform(props) {
 
     //definimos los datos del formualrio usando el Hook useState
     const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ function Productform() {
         return valid;
     }
 
-    
+
     // funcion para enviar datos del formulario al back
     const enviarDatos = () => {
 
@@ -60,6 +60,7 @@ function Productform() {
                 .then((respuesta) => {
                     console.log(respuesta);
                     if (respuesta.status === 200) {
+                        props.refrescarProductos();
                         setFormData({
                             name: '',
                             description: '',
