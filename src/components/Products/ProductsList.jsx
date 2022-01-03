@@ -51,6 +51,8 @@ function ProductsList(props) {
                 </TableRow>
                </TableHead>
                <TableBody>
+                   {/* utilizamos la funcion map para recorrer el array de productos
+                   cada producto se asigna a la variable product y se pone en cada una de las celdas */}
                    {props.products.map((product) => (
                         <TableRow key={product.id}>
                             <TableCell>{product.id}</TableCell>
@@ -61,6 +63,7 @@ function ProductsList(props) {
                             <TableCell align="center">{product.type}</TableCell>
                             <TableCell align="center">
                             <IconButton 
+                                // cuando se da clic se envia el producto a editar
                                 onClick={() => props.editarProducto(product)}
                                 color="secondary"
                             >
