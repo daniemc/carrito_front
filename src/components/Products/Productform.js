@@ -12,6 +12,7 @@ function Productform(props) {
 
     //definimos los datos del formualrio usando el Hook useState
     const [formData, setFormData] = useState({
+        id: null,
         name: '',
         description: '',
         qty: 0,
@@ -62,6 +63,7 @@ function Productform(props) {
                     if (respuesta.status === 200) {
                         props.refrescarProductos();
                         setFormData({
+                            id: null,
                             name: '',
                             description: '',
                             qty: 0,
@@ -75,6 +77,48 @@ function Productform(props) {
             alert("Por favor complete el formulario correctamente.")
         }
     }
+
+    const actualizarDatos = () => {
+
+        //Se valida que el formulario sea valido
+        if (formIsValid()) {
+            // Se crea la variable payload para enviar solo los datos que se deben 
+            //actualizar en el back
+            const payload = {
+                name: formData.name,
+                description: formData.description,
+                qty: formData.qty,
+                price: formData.price,
+            }
+            //Se usa axios con el metodo POST para enviar los datos
+            axios.put(`/products/${formData.id}`, payload)
+                .then((respuesta) => {
+                    console.log(respuesta);
+                    if (respuesta.status === 200) {
+                        props.refrescarProductos();
+                        props.dejarDeEditar();
+                        setFormData({
+                            id: null,
+                            name: '',
+                            description: '',
+                            qty: 0,
+                            price: 0,
+                        });
+                    }
+                })
+
+        } else {
+            //Si no es valido se saca una alerta
+            alert("Por favor complete el formulario correctamente.")
+        }
+    }
+
+    useEffect(() => {
+        if (props.editandoProducto) {
+            setFormData({...props.productoAEditar});
+        }
+
+    }, [props.editandoProducto])
 
     return (
         <form>
@@ -106,13 +150,23 @@ function Productform(props) {
                 onChange={(e) => cambioEnForm(e)}
                 type="number" 
             />
-            <Button 
+            {props.editandoProducto ? 
+            (<Button 
+                color="secondary" 
+                variant="contained"
+                onClick={() => actualizarDatos()}
+            >
+                Actualizar
+            </Button>) : 
+            (<Button 
                 color="primary" 
                 variant="contained"
                 onClick={() => enviarDatos()}
             >
                 Guardar
-            </Button>
+            </Button>)
+            }
+            
         </form>
     );
 }

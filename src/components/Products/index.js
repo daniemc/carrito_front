@@ -42,9 +42,23 @@ export default function Products() {
         // para ejecutarla cada que se crea el componente y cada qyue elimino un producto
         getProducts();
 
-
+    //use efect recibe un segundo parametro, en este caso [], para vitar que se ejcute muchas veces
     }, [])
 
+    const [editando, setEditando] = useState(false)
+    const [productoAEditar, setProoductoEditar] = useState({
+        name: '',
+        description: '',
+        qty: 0,
+        price: 0,
+    })
+
+    const editProduct = (producto) => {
+        setEditando(true);
+        setProoductoEditar({...producto});
+    }
+
+    const dejarDeEditar = () => setEditando(false);
 
     return (
         //React siempre necesita que un componente se renderice sobre solo una etiqueta padre
@@ -55,10 +69,19 @@ export default function Products() {
             <br />
             {/* aqui, como componente padre, le estoy mandando propiedades (props) a mi hijo (productform)
             las propiedades se pueden llamar como yo quiera y pueden tener el valor que yo desee enviar */}
-            <Productform refrescarProductos={getProducts} />
+            <Productform 
+                editandoProducto={editando}
+                productoAEditar={productoAEditar}
+                dejarDeEditar={dejarDeEditar}
+                refrescarProductos={getProducts} 
+            />
             <br />
             <br />
-            <ProductsList products={products} refrescarProductos={getProducts} />
+            <ProductsList 
+                products={products} 
+                refrescarProductos={getProducts} 
+                editarProducto={editProduct}
+            />
         </>
     );
 }

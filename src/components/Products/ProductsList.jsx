@@ -61,6 +61,7 @@ function ProductsList(props) {
                             <TableCell align="center">{product.type}</TableCell>
                             <TableCell align="center">
                             <IconButton 
+                                onClick={() => props.editarProducto(product)}
                                 color="secondary"
                             >
                                 <EditIcon />
